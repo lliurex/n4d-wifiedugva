@@ -1,0 +1,15 @@
+#!/bin/sh
+set -e
+
+case $1 in
+        remove|purge|abort-install|disappear)
+            systemctl --global disable WifiEduGva.service || true
+            ;;
+        *)
+            echo "Nothing to do"
+            ;;
+esac
+
+# Other Stuff #
+
+#DEBHELPER#

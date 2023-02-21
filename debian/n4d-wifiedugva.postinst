@@ -1,0 +1,20 @@
+#!/bin/sh
+
+set -e
+
+
+case $1 in
+
+        configure)
+            systemctl --global enable WifiEduGva.service || true
+                ;;
+        abort-upgrade|abort-remove|abort-deconfigure)
+                ;;
+        *)
+                echo "Nothing to do"
+                ;;
+esac
+
+#DEBHELPER#
+
+exit 0
