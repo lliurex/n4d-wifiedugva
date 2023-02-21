@@ -1,0 +1,64 @@
+{
+    "SETUP": {
+        "type": "python",
+        "path": "WifiEduGva.py",
+        "class": "WifiEduGva"
+    },
+    "METHODS": {
+        "scan_network": {
+            "allowed_groups": [
+                "anonymous"
+            ]
+        },
+        "create_connection": {
+            "allowed_groups": [
+                "anonymous"
+            ]
+        },
+        "get_active_connections": {
+            "allowed_groups": [
+                "anonymous"
+            ]
+        },
+        "check_wired_connection": {
+            "allowed_groups": [
+                "anonymous"
+            ]
+        },
+        "disconnect_all": {
+            "allowed_groups": [
+                "anonymous"
+            ]
+        },
+        "disconnect": {
+            "allowed_groups": [
+                "anonymous"
+            ]
+        },
+        "get_settings" : {
+            "allowed_groups": [
+                "anonymous"
+            ]
+        },
+        "set_settings" : {
+            "allowed_groups": [
+                "anonymous"
+            ]
+        },
+        "wait_for_domain" : {
+            "allowed_groups": [
+                "anonymous"
+            ]
+        },
+        "get_autologin" : {
+            "allowed_groups": [
+                "anonymous"
+            ]
+        },
+        "set_autologin" : {
+            "allowed_groups": [
+                "anonymous"
+            ]
+        }
+    }
+}

@@ -1,0 +1,14 @@
+{
+    "SDDM_WIFIEDUGVA_SETTINGS":
+    {
+        "value":0,
+        "volatile":false,
+        "description": "0: Disabled, 1: Teachers, 2: Students, 3: Student autologin (alumnat)"
+    },
+    "SDDM_WIFIEDUGVA_AUTOLOGIN":
+    {
+        "value":"",
+        "volatile":false,
+        "description": "Autologin Wifi pass key"
+    }
+}
