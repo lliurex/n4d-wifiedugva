@@ -1,3 +1,9 @@
+n4d-wifiedugva (22.0.1.0) focal; urgency=medium
+
+  * Connections are shut down at the end of session (this was not working due to several bugs)
+
+ -- Enrique Medina Gremaldos <quiqueiii@gmail.com>  Thu, 02 Mar 2023 16:10:36 +0100
+
 n4d-wifiedugva (22.0.0.0) focal; urgency=medium
 
   * This package replaces n4d-escoles-conectades
