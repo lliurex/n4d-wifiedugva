@@ -2,9 +2,10 @@
 Description=turn down WifiEduGva networks
 
 [Service]
-Type=oneshot
+Type=simple
+RemainAfterExit=true
 ExecStart=/bin/true
-ExecStop=/usr/bin/n4d-client call WifiEduGva.disconnect "['WifiEduGva','$USER']"
+ExecStop=/usr/bin/n4d-client call WifiEduGva.disconnect "['WifiEduGva','%u']"
 
 [Install]
 WantedBy=default.target

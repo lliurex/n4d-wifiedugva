@@ -166,7 +166,7 @@ class WifiEduGva:
 					settings = connection.Connection.GetSettings()
 					tmp = settings.get("802-1x")
 
-					if (not tmp == None) and tmp["identity"] == name:
+					if (not tmp == None) and tmp["identity"] == user:
 						nm.NetworkManager.DeactivateConnection(connection.object_path)
 						return n4d.responses.build_successful_call_response(True)
 
