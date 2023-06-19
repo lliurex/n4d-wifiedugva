@@ -1,3 +1,9 @@
+n4d-wifiedugva (23.0.0.0) focal; urgency=medium
+
+  * Trying to delete connection after session exit
+
+ -- Enrique Medina Gremaldos <quiqueiii@gmail.com>  Mon, 19 Jun 2023 11:46:33 +0200
+
 n4d-wifiedugva (22.0.1.0) focal; urgency=medium
 
   * Connections are shut down at the end of session (this was not working due to several bugs)
