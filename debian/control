@@ -2,12 +2,12 @@ Source: n4d-wifiedugva
 Section: misc
 Priority: standard
 Maintainer: Equipo LliureX <lliurex@gva.es>
-Build-Depends: debhelper (>= 7), python3, n4d(>=0.951), python3-networkmanager, n4d-dev
+Build-Depends: debhelper (>= 7), python3, n4d(>=0.951), gir1.2-nm-1.0, n4d-dev
 Standards-Version: 3.9.3
 
 Package: n4d-wifiedugva
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, python3, n4d(>=0.951), python3-networkmanager, sssd-dbus
+Depends: ${shlibs:Depends}, ${misc:Depends}, python3, n4d(>=0.951), gir1.2-nm-1.0, sssd-dbus
 Provides: n4d-escoles-conectades
 Replaces: n4d-escoles-conectades
 Conflicts: n4d-escoles-conectades

@@ -1,3 +1,9 @@
+n4d-wifiedugva (23.1.1.0) focal; urgency=medium
+
+  * Sync with jammy
+
+ -- Enrique Medina Gremaldos <quiqueiii@gmail.com>  Tue, 05 Dec 2023 10:35:37 +0100
+
 n4d-wifiedugva (23.0.0.0) focal; urgency=medium
 
   * Trying to delete connection after session exit
