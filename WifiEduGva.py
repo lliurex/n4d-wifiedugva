@@ -20,7 +20,10 @@
 import n4d.responses
 import n4d.server.core
 
-import NetworkManager as nm
+import gi
+gi.require_version("NM", "1.0")
+from gi.repository import NM
+from gi.repository import GLib
 
 import codecs
 import threading
@@ -31,6 +34,7 @@ import hashlib
 import binascii
 import os
 import dbus
+import uuid
 
 def _wpa_psk(ssid,password):
 	dk = hashlib.pbkdf2_hmac('sha1', str.encode(password), str.encode(ssid), 4096, 32)
@@ -43,134 +47,183 @@ class WifiEduGva:
 
 	def __init__(self):
 		self.semaphore = threading.Semaphore(1)
+		self.ready = False
 
-	def get_devices(self):
-	# This is a workaround because current python3-networkmanager version (2.1)
-	# does not support device types bigger than 26 and crash
-		devices = []
+	def nm_cb(self, dev, res, data):
+		self.ready = True
 
-		for n in range(1,32):
-			try:
-				dev = nm.Device("/org/freedesktop/NetworkManager/Devices/{0}".format(n))
-				devices.append(dev)
-			except dbus.DBusException:
-				break
-			except KeyError:
-				#catch bug and ignore device, any way is not a wifi device we are interested in
-				continue
+	def wait_sync(self,client):
+		self.ready = False
+		context = client.get_main_context()
+		while not self.ready:
+			context.iteration(False)
+			time.sleep(0.250)
 
-
-		return devices
+	def flush(self,client):
+		context = client.get_main_context()
+		while context.iteration(False):
+			pass
 
 	def scan_network(self):
 		with self.semaphore:
+			client = NM.Client.new(None)
+			self.flush(client)
+
 			wifi = None
-			for device in self.get_devices():
-				if (device.DeviceType == nm.NM_DEVICE_TYPE_WIFI):
+			for device in client.get_devices():
+				if (device.get_device_type() == NM.DeviceType.WIFI):
 					wifi = device
 					break
 
 			if (not wifi):
 				return n4d.responses.build_failed_call_response(EscolesConectades.ERROR_NO_WIFI_DEV,"No wireless device available")
 			try:
-				last = wifi.LastScan
-				wifi.RequestScan([])
-				while wifi.LastScan<=last:
-					time.sleep(0.5)
+				t0 = time.time()
+				last = wifi.get_last_scan()
+				wifi.request_scan_async(None,None,None)
+
+				while (wifi.get_last_scan() <= last):
+					self.flush(client)
+					time.sleep(0.250)
+					t1 = time.time()
+					if ((t1 - t0) > 30.0):
+						break
+						#just time out after 30s
 
 			except Exception as e:
 				#perhaps a scan is going on...
 				time.sleep(2.0)
 
 			aps = []
-			for ap in wifi.AccessPoints:
-				aps.append([ap.Ssid,ap.Strength])
+			for ap in wifi.get_access_points():
+				ssid = ap.get_ssid()
+				if (ssid):
+					ssid = ssid.get_data().decode("utf-8")
+				else:
+					ssid = ""
 
+				aps.append([ssid,ap.get_strength()])
+
+			self.flush(client)
 			return n4d.responses.build_successful_call_response(aps)
 
 	def create_connection(self,name,ssid,user,password,wpa_mode):
 		with self.semaphore:
+			client = NM.Client.new(None)
+			self.flush(client)
 
-			ec = None
-
-			for c in nm.Settings.Connections:
-				if c.GetSettings()["connection"]["id"] == name:
-					ec = c
+			found = None
+			for connection in client.get_connections():
+				if (connection.get_id() == name):
+					found = connection
 					break
-			if ec:
-				ec.Delete()
 
-			connection = {}
-			connection["connection"] = {}
-			connection["connection"]["id"] = name
-			connection["connection"]["type"] = "802-11-wireless"
-			#connection["connection"]["permissions"] = ["user:{0}:".format(user)]
-			#connection["connection"]["permissions"] = ["user:root:"]
+			if (found):
+				connection.delete_async(None,self.nm_cb,None)
+				self.wait_sync(client)
 
-			connection["802-11-wireless"] = {}
-			connection["802-11-wireless"]["ssid"] = dbus.ByteArray(bytes(ssid,'utf-8'))
-			connection["802-11-wireless"]["mode"] = "infrastructure"
+			profile = NM.SimpleConnection.new()
 
-			connection["802-11-wireless-security"] = {}
-			if wpa_mode=="personal":
-				connection["802-11-wireless-security"]["key-mgmt"] = "wpa-psk"
-				connection["802-11-wireless-security"]["psk"] = _wpa_psk(ssid,password)
+			settings = NM.SettingConnection.new()
+			settings.set_property(NM.SETTING_CONNECTION_ID, name)
+			settings.set_property(NM.SETTING_CONNECTION_UUID, str(uuid.uuid4()))
+			settings.set_property(NM.SETTING_CONNECTION_TYPE, "802-11-wireless")
+			profile.add_setting(settings)
+
+			settings = NM.SettingWireless.new()
+			settings.set_property(NM.SETTING_WIRELESS_SSID, GLib.Bytes(bytes(ssid.encode("utf-8"))))
+			settings.set_property(NM.SETTING_WIRELESS_MODE, "infrastructure")
+			profile.add_setting(settings)
+
+			if (wpa_mode == "personal"):
+				settings = NM.SettingWirelessSecurity.new()
+				settings.set_property(NM.SETTING_WIRELESS_SECURITY_KEY_MGMT, "wpa-psk")
+				settings.set_property(NM.SETTING_WIRELESS_SECURITY_PSK, _wpa_psk(ssid,password))
+				profile.add_setting(settings)
 			else:
-				connection["802-11-wireless-security"]["key-mgmt"] = "wpa-eap"
-				connection["802-1x"] = {}
-				connection["802-1x"]["eap"] = ["peap"]
-				connection["802-1x"]["identity"] = user
-				connection["802-1x"]["password"] = password
-				connection["802-1x"]["phase2-auth"] = "mschapv2"
+				settings = NM.SettingWirelessSecurity.new()
+				settings.set_property(NM.SETTING_WIRELESS_SECURITY_KEY_MGMT, "wpa-eap")
+				profile.add_setting(settings)
 
-			connection["ipv4"] = {}
-			connection["ipv4"]["method"] = "auto"
+				settings = NM.Setting8021x.new()
+				settings.set_property(NM.SETTING_802_1X_EAP, ["peap"])
+				settings.set_property(NM.SETTING_802_1X_IDENTITY, user)
+				settings.set_property(NM.SETTING_802_1X_PASSWORD, password)
+				settings.set_property(NM.SETTING_802_1X_PHASE2_AUTH, "mschapv2")
+				profile.add_setting(settings)
 
-			# This magic flag 0x02 renders connection volatile, so it will be destroyed on next boot
-			tmp = nm.Settings.AddConnection2(connection,0x02,[])
+				settings = NM.SettingIP4Config.new()
+				settings.set_property(NM.SETTING_IP_CONFIG_METHOD, "auto")
+				profile.add_setting(settings)
 
-			nm.NetworkManager.ActivateConnection(dbus.types.String(tmp[0].object_path),dbus.types.String("/"),dbus.types.String("/"))
+			client.add_connection_async(profile,False,None,self.nm_cb,None)
+			self.wait_sync(client)
 
+			#print("Activating connection...")
+			#client.activate_connection_async(profile,None,None,None,self.nm_cb,None)
+			#self.wait_sync(client)
+
+			self.flush(client)
 			return n4d.responses.build_successful_call_response()
 
 	def get_active_connections(self):
 		with self.semaphore:
-			connections=[]
-			for connection in nm.NetworkManager.ActiveConnections:
-				connections.append([connection.Id,connection.Type])
+			client = NM.Client.new(None)
+			self.flush(client)
 
+			connections=[]
+			for connection in client.get_active_connections():
+				connections.append([connection.get_id(),connection.get_connection_type()])
+
+			self.flush(client)
 			return n4d.responses.build_successful_call_response(connections)
 
 	def check_wired_connection(self):
-		connections = self.get_active_connections()
-		for connection in connections["return"]:
-			if connection[1] == "802-3-ethernet":
-				return n4d.responses.build_successful_call_response(True)
+		with self.semaphore:
+			client = NM.Client.new(None)
+			self.flush(client)
 
-		return n4d.responses.build_successful_call_response(False)
+			found = False
+			for connection in client.get_active_connections():
+				if (connection.get_connection_type() == "802-3-ethernet"):
+					found = True
+					break
+
+			self.flush(client)
+			return n4d.responses.build_successful_call_response(found)
 
 	def disconnect_all(self):
 		with self.semaphore:
+			client = NM.Client.new(None)
+			self.flush(client)
 
-			for connection in nm.NetworkManager.ActiveConnections:
-				if (connection.Type=="802-11-wireless"):
-					nm.NetworkManager.DeactivateConnection(connection)
+			found = False
+			for connection in client.get_active_connections():
+				if (connection.get_connection_type() == "802-11-wireless"):
+					client.deactivate_connection_async(connection,None,self.nm_cb,None)
+					self.wait_sync(client)
 
+			self.flush(client)
 			return n4d.responses.build_successful_call_response()
 
 	def disconnect(self,name,user):
 		with self.semaphore:
+			client = NM.Client.new(None)
+			self.flush(client)
 
-			for connection in nm.NetworkManager.ActiveConnections:
-				if connection.Id == name:
-					settings = connection.Connection.GetSettings()
-					tmp = settings.get("802-1x")
+			found = False
+			for connection in client.get_active_connections():
+				if (connection.get_id() == name):
+					conn = connection.get_connection()
+					settings = conn.get_setting_802_1x()
 
-					if (not tmp == None) and tmp["identity"] == user:
-						nm.NetworkManager.DeactivateConnection(connection.object_path)
-						return n4d.responses.build_successful_call_response(True)
+					if (settings and settings.get_identity() == user):
+						found = True
+						client.deactivate_connection_async(connection,None,self.nm_cb,None)
+						self.wait_sync(client)
 
-			return n4d.responses.build_successful_call_response(False)
+			self.flush(client)
+			return n4d.responses.build_successful_call_response(found)
 
 	def get_settings(self):
 		var = n4d.server.core.Core.get_core().get_variable("SDDM_WIFIEDUGVA_SETTINGS")
@@ -207,3 +260,7 @@ class WifiEduGva:
 			return n4d.responses.build_successful_call_response(retries>0)
 		except Exception as e:
 			return n4d.responses.build_failed_call_response(EscolesConectades.ERROR_WAITING_FOR_DOMAIN,"Error waiting for domain.")
+
+if __name__=="__main__":
+	w = WifiEduGva()
+	print(w.scan_network())
