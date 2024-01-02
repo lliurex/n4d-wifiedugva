@@ -263,6 +263,14 @@ class WifiEduGva:
 		except Exception as e:
 			return n4d.responses.build_failed_call_response(EscolesConectades.ERROR_WAITING_FOR_DOMAIN,"Error waiting for domain.")
 
+	def check_connectivity(self):
+		with self.semaphore:
+			client = NM.Client.new(None)
+			client.check_connectivity_async(None,self.nm_cb,None)
+			self.wait_sync(client)
+			status = client.get_connectivity()
+			return n4d.responses.build_successful_call_response(status == NM.ConnectivityState.FULL)
+
 if __name__=="__main__":
 	w = WifiEduGva()
 	print(w.scan_network())
