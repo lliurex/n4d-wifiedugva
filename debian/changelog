@@ -1,3 +1,9 @@
+n4d-wifiedugva (23.2.0.0) focal; urgency=medium
+
+  * Sync with jammy
+
+ -- Enrique Medina Gremaldos <quiqueiii@gmail.com>  Tue, 02 Jan 2024 14:06:46 +0100
+
 n4d-wifiedugva (23.1.1.0) focal; urgency=medium
 
   * Sync with jammy
