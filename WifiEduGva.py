@@ -20,8 +20,6 @@
 import n4d.responses
 import n4d.server.core
 
-import NetworkManager as nm
-
 import gi
 gi.require_version("NM", "1.0")
 from gi.repository import NM
