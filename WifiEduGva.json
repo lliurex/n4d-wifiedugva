@@ -59,6 +59,11 @@
             "allowed_groups": [
                 "anonymous"
             ]
+        },
+        "check_connectivity" : {
+            "allowed_groups" : [
+                "anonymous"
+            ]
         }
     }
 }
