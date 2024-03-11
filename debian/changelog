@@ -1,3 +1,9 @@
+n4d-wifiedugva (23.3.0.0) jammy; urgency=medium
+
+  * Added some basic (really basic) cdc enabled check
+
+ -- Enrique Medina Gremaldos <quique@necos.es>  Mon, 11 Mar 2024 13:14:27 +0100
+
 n4d-wifiedugva (23.2.0.0) jammy; urgency=medium
 
   * Added a connectivity check method
