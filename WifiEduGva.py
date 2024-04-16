@@ -223,6 +223,9 @@ class WifiEduGva:
 						client.deactivate_connection_async(connection,None,self.nm_cb,None)
 						self.wait_sync(client)
 
+						# NM Api doesn't seem to provide a way to do this
+						os.system("nmcli connection delete {0}".format(name))
+
 			self.flush(client)
 			return n4d.responses.build_successful_call_response(found)
 
