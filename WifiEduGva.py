@@ -35,6 +35,7 @@ import binascii
 import os
 import dbus
 import uuid
+from pathlib import Path
 
 def _wpa_psk(ssid,password):
 	dk = hashlib.pbkdf2_hmac('sha1', str.encode(password), str.encode(ssid), 4096, 32)
@@ -222,6 +223,9 @@ class WifiEduGva:
 						client.deactivate_connection_async(connection,None,self.nm_cb,None)
 						self.wait_sync(client)
 
+						# NM Api doesn't seem to provide a way to do this
+						os.system("nmcli connection delete {0}".format(name))
+
 			self.flush(client)
 			return n4d.responses.build_successful_call_response(found)
 
@@ -242,6 +246,10 @@ class WifiEduGva:
 		value = codecs.encode(value,"rot13")
 		n4d.server.core.Core.get_core().set_variable("SDDM_WIFIEDUGVA_AUTOLOGIN",value)
 		return n4d.responses.build_successful_call_response()
+
+	def is_cdc_enabled(self):
+		sssd_conf = Path("/etc/sssd/sssd.conf")
+		return n4d.responses.build_successful_call_response(sssd_conf.exists())
 
 	def wait_for_domain(self):
 		try:

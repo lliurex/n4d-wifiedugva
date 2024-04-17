@@ -64,6 +64,11 @@
             "allowed_groups" : [
                 "anonymous"
             ]
+        },
+        "is_cdc_enabled" : {
+            "allowed_groups" : [
+                "anonymous"
+            ]
         }
     }
 }

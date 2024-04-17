@@ -1,12 +1,11 @@
 [Unit]
-Description=turn down WifiEduGva networks
+Description=Turn down and destroy WifiEduGva connections
 
 [Service]
 Type=simple
 RemainAfterExit=true
 ExecStart=/bin/true
 ExecStop=/usr/bin/n4d-client call WifiEduGva.disconnect "['WifiEduGva','%u']"
-ExecStop=+/usr/bin/nmcli connection delete WifiEduGva
 
 [Install]
 WantedBy=default.target
