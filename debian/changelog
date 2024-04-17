@@ -1,3 +1,9 @@
+n4d-wifiedugva (23.4.0.0) focal; urgency=medium
+
+  * Fixed a bug that prevented connection to be destroyed at session exit
+
+ -- Enrique Medina Gremaldos <quique@necos.es>  Wed, 17 Apr 2024 09:55:03 +0200
+
 n4d-wifiedugva (23.2.0.0) focal; urgency=medium
 
   * Sync with jammy
