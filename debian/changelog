@@ -1,3 +1,9 @@
+n4d-wifiedugva (23.4.0.0) jammy; urgency=medium
+
+  * Fixed a bug that prevented connection to be destroyed at session exit
+
+ -- Enrique Medina Gremaldos <quique@necos.es>  Wed, 17 Apr 2024 09:50:23 +0200
+
 n4d-wifiedugva (23.3.0.0) jammy; urgency=medium
 
   * Added some basic (really basic) cdc enabled check
