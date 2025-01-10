@@ -1,3 +1,9 @@
+n4d-wifiedugva (25.0.0.0) noble; urgency=medium
+
+  * Added a gateway checking option
+
+ -- Enrique Medina Gremaldos <quique@necos.es>  Fri, 10 Jan 2025 23:39:33 +0100
+
 n4d-wifiedugva (23.4.0.1) noble; urgency=medium
 
   * Noble version
