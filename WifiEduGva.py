@@ -179,14 +179,15 @@ class WifiEduGva:
 			self.flush(client)
 			return n4d.responses.build_successful_call_response(connections)
 
-	def check_wired_connection(self):
+	def check_wired_connection(self, check_gateway):
 		with self.semaphore:
 			client = NM.Client.new(None)
 			self.flush(client)
 
 			found = False
 			for connection in client.get_active_connections():
-				if (connection.get_connection_type() == "802-3-ethernet"):
+				gw_ok = ( (not check_gateway) or bool(connection.get_ip4_config().get_gateway()))
+				if (connection.get_connection_type() == "802-3-ethernet" and gw_ok):
 					found = True
 					break
 
