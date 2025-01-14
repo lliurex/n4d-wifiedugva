@@ -1,3 +1,9 @@
+n4d-wifiedugva (25.1.0.0) jammy; urgency=medium
+
+  * Fixed version number
+
+ -- Luis Garcia Gisbert <luisgg@gmail.com>  Tue, 14 Jan 2025 20:49:39 +0100
+
 n4d-wifiedugva (23.5.0.0) jammy; urgency=medium
 
   * Ignore wired connections that do not provide a gateway
