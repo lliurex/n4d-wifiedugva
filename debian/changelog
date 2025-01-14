@@ -1,3 +1,9 @@
+n4d-wifiedugva (23.5.0.0) jammy; urgency=medium
+
+  * Ignore wired connections that do not provide a gateway
+
+ -- Luis Garcia Gisbert <luisgg@gmail.com>  Tue, 14 Jan 2025 20:39:08 +0100
+
 n4d-wifiedugva (23.4.0.0) jammy; urgency=medium
 
   * Fixed a bug that prevented connection to be destroyed at session exit
