@@ -1,3 +1,9 @@
+n4d-wifiedugva (25.1.1.0) jammy; urgency=medium
+
+  * Fixed tabs/spaces typo
+
+ -- Luis Garcia Gisbert <luisgg@gmail.com>  Wed, 15 Jan 2025 13:04:27 +0100
+
 n4d-wifiedugva (25.1.0.0) jammy; urgency=medium
 
   * Fixed version number
