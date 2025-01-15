@@ -180,8 +180,8 @@ class WifiEduGva:
 			return n4d.responses.build_successful_call_response(connections)
 
 	def check_wired_connection(self):
-        # Force additional gateway check
-	    check_gateway = True
+		# Force additional gateway check
+		check_gateway = True
 		with self.semaphore:
 			client = NM.Client.new(None)
 			self.flush(client)
