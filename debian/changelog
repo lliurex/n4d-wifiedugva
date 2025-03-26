@@ -1,3 +1,10 @@
+n4d-wifiedugva (25.2.0.0) jammy; urgency=medium
+
+  * Added dirty hack to be able to skip WIFI_EDU by touching
+    /etc/n4d-wifiedugva-ignore-wifiedu file. 
+
+ -- Hector Garcia Huerta <hectorgh@gmail.com>  Wed, 26 Mar 2025 17:34:50 +0100
+
 n4d-wifiedugva (25.1.1.0) jammy; urgency=medium
 
   * Fixed tabs/spaces typo
