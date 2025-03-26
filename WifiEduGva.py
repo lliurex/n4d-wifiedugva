@@ -86,7 +86,7 @@ class WifiEduGva:
 					break
 
 			if (not wifi):
-				return n4d.responses.build_failed_call_response(EscolesConectades.ERROR_NO_WIFI_DEV,"No wireless device available")
+				return n4d.responses.build_failed_call_response(WifiEduGva.ERROR_NO_WIFI_DEV,"No wireless device available")
 			try:
 				t0 = time.time()
 				last = wifi.get_last_scan()
@@ -283,7 +283,7 @@ class WifiEduGva:
 
 			return n4d.responses.build_successful_call_response(retries>0)
 		except Exception as e:
-			return n4d.responses.build_failed_call_response(EscolesConectades.ERROR_WAITING_FOR_DOMAIN,"Error waiting for domain.")
+			return n4d.responses.build_failed_call_response(WifiEduGva.ERROR_WAITING_FOR_DOMAIN,"Error waiting for domain.")
 
 	def check_connectivity(self):
 		with self.semaphore:
