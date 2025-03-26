@@ -35,6 +35,8 @@ import binascii
 import os
 import dbus
 import uuid
+import os
+
 from pathlib import Path
 
 def _wpa_psk(ssid,password):
@@ -45,10 +47,17 @@ class WifiEduGva:
 
 	ERROR_NO_WIFI_DEV = -1
 	ERROR_WAITING_FOR_DOMAIN = -2
+	
+	# Fast hack to skip WIFI_EDU 
+	IGNORE_WIFI_EDU = False
+	IGNORE_WIFI_EDU_FILE = "/etc/n4d-wifiedugva-ignore-wifiedu"
 
 	def __init__(self):
 		self.semaphore = threading.Semaphore(1)
 		self.ready = False
+		
+		if os.path.exists(WifiEduGva.IGNORE_WIFI_EDU_FILE):
+			WifiEduGva.IGNORE_WIFI_EDU = True
 
 	def nm_cb(self, dev, res, data):
 		self.ready = True
@@ -102,7 +111,11 @@ class WifiEduGva:
 					ssid = ssid.get_data().decode("utf-8")
 				else:
 					ssid = ""
-
+				
+				# If  IGNORE_WIFI_EDU_FILE exists and WIFI_EDU has been scanned, skip it
+				if WifiEduGva.IGNORE_WIFI_EDU and ssid =="WIFI_EDU":
+					continue
+				
 				aps.append([ssid,ap.get_strength()])
 
 			self.flush(client)
