@@ -3,7 +3,7 @@
     {
         "value":0,
         "volatile":false,
-        "description": "0: Disabled, 1: Teachers, 2: Students, 3: Student autologin (alumnat)"
+        "description": "0: Disabled, 1: Teachers, 2: Students, 3: Student autologin (alumnat), 4: WifiEdu, 128: Auto"
     },
     "SDDM_WIFIEDUGVA_AUTOLOGIN":
     {
