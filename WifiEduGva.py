@@ -38,6 +38,7 @@ import uuid
 import os
 
 from pathlib import Path
+import subprocess
 
 def _wpa_psk(ssid,password):
 	dk = hashlib.pbkdf2_hmac('sha1', str.encode(password), str.encode(ssid), 4096, 32)
@@ -292,6 +293,43 @@ class WifiEduGva:
 			self.wait_sync(client)
 			status = client.get_connectivity()
 			return n4d.responses.build_successful_call_response(status == NM.ConnectivityState.FULL)
+
+	def guess_mode(self):
+
+		with self.semaphore:
+			guessed = 0
+			ceip = ["lliurex-meta-gva-desktop-ceip"]
+			ceip_adi = ["lliurex-meta-gva-adi-ceip"]
+			ies = ["lliurex-meta-gva-desktop-ies, lliurex-meta-gva-desktop-fp"]
+			ies_adi = ["lliurex-meta-gva-adi-ies, lliurex-meta-gva-adi-fp"]
+
+			try:
+				p = subprocess.Popen(["/usr/bin/dpkg","-l","--no-pager"],stdout=subprocess.PIPE)
+				sout,serr = p.communicate(timeout = 5)
+
+				lines = sout.decode("utf-8").split("\n")
+				packages = []
+
+				for line in lines:
+				tmp = line.split()
+
+				if len(tmp)>2:
+					if (tmp[0] == "ii"):
+						package = tmp[1].split(":")[0]
+						packages.append(package)
+
+				is_ceip = False
+				is_ies = False
+				is_adi = False
+
+				for package in packages:
+					is_ceip = is_ceip or (package in ceip)
+					is_ies = is_ies or (package in ies)
+
+			except Exception as e:
+				pass
+
+			return n4d.responses.build_failed_call_response(guessed)
 
 if __name__=="__main__":
 	w = WifiEduGva()
