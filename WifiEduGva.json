@@ -69,6 +69,11 @@
             "allowed_groups" : [
                 "anonymous"
             ]
+        },
+        "guess_mode" : {
+            "allowed_groups" : [
+                "anonymous"
+            ]
         }
     }
 }

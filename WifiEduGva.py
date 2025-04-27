@@ -299,9 +299,8 @@ class WifiEduGva:
 		with self.semaphore:
 			guessed = 0
 			ceip = ["lliurex-meta-gva-desktop-ceip"]
-			ceip_adi = ["lliurex-meta-gva-adi-ceip"]
 			ies = ["lliurex-meta-gva-desktop-ies, lliurex-meta-gva-desktop-fp"]
-			ies_adi = ["lliurex-meta-gva-adi-ies, lliurex-meta-gva-adi-fp"]
+			adi = ["lliurex-meta-gva-adi-ceip","lliurex-meta-gva-adi-ies, lliurex-meta-gva-adi-fp"]
 
 			try:
 				p = subprocess.Popen(["/usr/bin/dpkg","-l","--no-pager"],stdout=subprocess.PIPE)
@@ -325,9 +324,19 @@ class WifiEduGva:
 				for package in packages:
 					is_ceip = is_ceip or (package in ceip)
 					is_ies = is_ies or (package in ies)
+					is_adi = is_adi or (package in adi)
 
 			except Exception as e:
 				pass
+
+			if is_ceip:
+				guessed = guessed | 1
+
+			if is_ies:
+				guessed = guessed | 2
+
+			if is_adi:
+				guessed = guessed | 4
 
 			return n4d.responses.build_failed_call_response(guessed)
 
