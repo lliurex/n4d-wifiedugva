@@ -1,3 +1,9 @@
+n4d-wifiedugva (25.2.1.0) noble; urgency=medium
+
+  * Fixed typo
+
+ -- Enrique Medina Gremaldos <quique@necos.es>  Tue, 29 Apr 2025 10:37:40 +0200
+
 n4d-wifiedugva (25.2.0.0) noble; urgency=medium
 
   * Able to guess wifi mode based on host packages
