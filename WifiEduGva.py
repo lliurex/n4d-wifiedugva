@@ -310,12 +310,12 @@ class WifiEduGva:
 				packages = []
 
 				for line in lines:
-				tmp = line.split()
+					tmp = line.split()
 
-				if len(tmp)>2:
-					if (tmp[0] == "ii"):
-						package = tmp[1].split(":")[0]
-						packages.append(package)
+					if len(tmp)>2:
+						if (tmp[0] == "ii"):
+							package = tmp[1].split(":")[0]
+							packages.append(package)
 
 				is_ceip = False
 				is_ies = False
