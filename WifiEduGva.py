@@ -338,7 +338,7 @@ class WifiEduGva:
 			if is_adi:
 				guessed = guessed | 4
 
-			return n4d.responses.build_failed_call_response(guessed)
+			return n4d.responses.build_successful_call_response(guessed)
 
 if __name__=="__main__":
 	w = WifiEduGva()
