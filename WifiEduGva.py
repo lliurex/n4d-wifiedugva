@@ -289,15 +289,21 @@ class WifiEduGva:
 	def check_connectivity(self):
 		with self.semaphore:
 			client = NM.Client.new(None)
-			retries = 10
+			retries = 30
 			while retries > 0:
 				client.check_connectivity_async(None,self.nm_cb,None)
 				self.wait_sync(client)
 				status = client.get_connectivity()
 				print("connectivity status:{0}".format(status))
+
 				if (status == NM.ConnectivityState.FULL):
 					return n4d.responses.build_successful_call_response(True)
 				else:
+					active = client.get_active_connections()
+					if (len(active) == 0):
+						# no active connections found
+						break
+
 					time.sleep(1)
 					retries = retries - 1
 
