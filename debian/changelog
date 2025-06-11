@@ -1,3 +1,11 @@
+n4d-wifiedugva (25.3.0.0) jammy; urgency=medium
+
+  * Better connection check
+  * backported flavor detection based on packages, but not used on 23
+  * Fixed bug scanning wireless networks
+
+ -- Enrique Medina Gremaldos <quique@necos.es>  Wed, 11 Jun 2025 23:24:21 +0200
+
 n4d-wifiedugva (25.2.0.0) jammy; urgency=medium
 
   * Added dirty hack to be able to skip WIFI_EDU by touching
