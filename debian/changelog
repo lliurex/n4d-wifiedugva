@@ -1,3 +1,9 @@
+n4d-wifiedugva (25.3.0) noble; urgency=medium
+
+  * Wait for connection has been improved
+
+ -- Enrique Medina Gremaldos <quique@necos.es>  Mon, 16 Jun 2025 14:55:19 +0200
+
 n4d-wifiedugva (25.2.2.0) noble; urgency=medium
 
   * Yet another typo fix
