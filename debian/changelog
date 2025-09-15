@@ -1,3 +1,9 @@
+n4d-wifiedugva (25.4.0) noble; urgency=medium
+
+  * Wifis has been merged into WIFI_EDU
+
+ -- Enrique Medina Gremaldos <quique@necos.es>  Mon, 15 Sep 2025 10:06:24 +0200
+
 n4d-wifiedugva (25.3.0) noble; urgency=medium
 
   * Wait for connection has been improved
