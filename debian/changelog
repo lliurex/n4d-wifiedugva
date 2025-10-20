@@ -1,3 +1,9 @@
+n4d-wifiedugva (25.3.1.0) jammy; urgency=medium
+
+  * Fixed a race condition waiting for active connections to come up
+
+ -- Enrique Medina Gremaldos <quique@necos.es>  Mon, 20 Oct 2025 10:36:49 +0200
+
 n4d-wifiedugva (25.3.0.0) jammy; urgency=medium
 
   * Better connection check

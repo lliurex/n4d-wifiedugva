@@ -301,8 +301,8 @@ class WifiEduGva:
 				else:
 					active = client.get_active_connections()
 					if (len(active) == 0):
-						# no active connections found
-						break
+						print("no active connections found")
+						retries = retries - 4
 
 					time.sleep(1)
 					retries = retries - 1
