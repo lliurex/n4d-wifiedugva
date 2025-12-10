@@ -273,6 +273,10 @@ class WifiEduGva:
 		n4d.server.core.Core.get_core().set_variable("SDDM_WIFIEDUGVA_AUTOLOGIN",value)
 		return n4d.responses.build_successful_call_response()
 
+	def get_whitelist(self):
+		var = n4d.server.core.Core.get_core().get_variable("SDDM_WIFIEDUGVA_SSID_WHITELIST")
+		return n4d.responses.build_successful_call_response(var["return"])
+
 	def is_cdc_enabled(self):
 		sssd_conf = Path("/etc/sssd/sssd.conf")
 		return n4d.responses.build_successful_call_response(sssd_conf.exists())
