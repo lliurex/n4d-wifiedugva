@@ -10,5 +10,11 @@
         "value":"",
         "volatile":false,
         "description": "Autologin Wifi pass key"
+    },
+    "SDDM_WIFIEDUGVA_SSID_WHITELIST":
+    {
+        "value":["WIFI_EDUCA"],
+        "volatile":false,
+        "description":"List of SSID allowed to log in into CDC (They should be already connected)"
     }
 }
