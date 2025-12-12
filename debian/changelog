@@ -1,3 +1,9 @@
+n4d-wifiedugva (25.4.0.0) jammy; urgency=medium
+
+  * Added a ssid whitelist mechanism
+
+ -- Enrique Medina Gremaldos <quique@necos.es>  Fri, 12 Dec 2025 09:24:32 +0100
+
 n4d-wifiedugva (25.3.1.0) jammy; urgency=medium
 
   * Fixed a race condition waiting for active connections to come up
