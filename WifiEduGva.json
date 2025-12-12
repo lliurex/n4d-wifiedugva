@@ -60,6 +60,11 @@
                 "anonymous"
             ]
         },
+        "get_whitelist" : {
+            "allowed_groups": [
+                "anonymous"
+            ]
+        },
         "check_connectivity" : {
             "allowed_groups" : [
                 "anonymous"
