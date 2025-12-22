@@ -183,12 +183,29 @@ class WifiEduGva:
 
 	def get_active_connections(self):
 		with self.semaphore:
+			check_gateway = True
+
 			client = NM.Client.new(None)
 			self.flush(client)
 
 			connections=[]
 			for connection in client.get_active_connections():
-				connections.append([connection.get_id(),connection.get_connection_type()])
+				connection_type = connection.get_connection_type()
+				data = {}
+				if (connection_type == "802-3-ethernet"):
+					gw_ok = ( (not check_gateway) or bool(connection.get_ip4_config().get_gateway()))
+
+					if (gw_ok):
+						connections.append([connection.get_id(),connection_type ,data])
+
+				if (connection_type == "802-11-wireless"):
+					settings = connection.get_setting_wireless()
+					ssid = settings.get_ssid()
+
+					if (ssid):
+						ssid = ssid.get_data().decode("utf-8")
+						data["ssid"] = ssid
+						connections.append([connection.get_id(),connection_type ,data])
 
 			self.flush(client)
 			return n4d.responses.build_successful_call_response(connections)
