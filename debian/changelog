@@ -1,3 +1,9 @@
+n4d-wifiedugva (25.4.1.0) jammy; urgency=medium
+
+  * Whitelist now should be checked from connection list before proceeding disconnection
+
+ -- Enrique Medina Gremaldos <quique@necos.es>  Mon, 29 Dec 2025 10:45:26 +0100
+
 n4d-wifiedugva (25.4.0.0) jammy; urgency=medium
 
   * Added a ssid whitelist mechanism
