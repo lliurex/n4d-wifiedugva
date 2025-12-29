@@ -227,23 +227,13 @@ class WifiEduGva:
 			self.flush(client)
 			return n4d.responses.build_successful_call_response(found)
 
-	def disconnect_all(self, whitelist):
+	def disconnect_all(self):
 		with self.semaphore:
 			client = NM.Client.new(None)
 			self.flush(client)
 
-			found = False
 			for connection in client.get_active_connections():
 				if (connection.get_connection_type() == "802-11-wireless"):
-					settings = connection.get_setting_wireless()
-					ssid = settings.get_ssid()
-					if (ssid and whitelist):
-						ssid = ssid.get_data().decode("utf-8")
-
-						if (ssid in whitelist):
-							print("Found a white listed active connection {0}".format(ssid))
-							break
-
 					client.deactivate_connection_async(connection,None,self.nm_cb,None)
 					self.wait_sync(client)
 
