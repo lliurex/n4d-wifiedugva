@@ -199,7 +199,7 @@ class WifiEduGva:
 						connections.append([connection.get_id(),connection_type ,data])
 
 				if (connection_type == "802-11-wireless"):
-					settings = connection.get_setting_wireless()
+					settings = connection.get_connection().get_setting_wireless()
 					ssid = settings.get_ssid()
 
 					if (ssid):
